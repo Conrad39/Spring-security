@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+  <meta charset="UTF-8">
+  <title></title>
+</head>
+<body>
+<div align="center">
+  <form th:action="@{/user/new}" th:object="${user}" method="post">
+    <br/> Name:
+    <input type="text" th:field="*{name}"/>
+    <br/> Surname:
+    <input type="text" th:field="*{surname}"/>
+    <br/> Email:
+    <input type="text" th:field="*{email}"/>
+    <br/>
+    <input type="submit" value="Save"/>
+  </form>
+</div>
+</body>
+</html>
