@@ -9,14 +9,19 @@
     <h2>Edit User</h2>
     <form th:action="@{/user/edit/{id}(id=${user.id})}" th:object="${user}" method="post">
         <br/> Name:
-        <input type="text" th:field="*{name}"/>
-        <br/> Surname:
-        <input type="text" th:field="*{surname}"/>
-        <br/> Email:
-        <input type="text" th:field="*{email}"/>
+        <input type="text" th:field="*{firstName}"/>
+        <br/> LastName:
+        <input type="text" th:field="*{lastName}"/>
+        <br/> Login:
+        <input type="text" th:field="*{username}"/>
+        <br/> Password:
+        <input type="text" th:field="*{password}"/>
         <br/>
+        <input type="checkbox" name="roless" value="ROLE_USER"/> USER
+        <input type="checkbox" name="roless" value="ROLE_ADMIN"/> ADMIN
         <input type="submit" value="Update User"/>
     </form>
+    <a th:href="@{/logout}">Logout</a>
 </div>
 </body>
 </html>

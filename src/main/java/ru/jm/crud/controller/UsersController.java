@@ -2,62 +2,84 @@ package ru.jm.crud.controller;
 // This is a personal academic project. Dear PVS-Studio, please check it.
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
-import org.springframework.beans.factory.annotation.Autowired;
+
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
+import ru.jm.crud.model.Role;
 import ru.jm.crud.model.User;
+import ru.jm.crud.service.RoleService;
 import ru.jm.crud.service.UserService;
 
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 @Controller
-@RequestMapping("/user")
+@RequestMapping("/")
 public class UsersController {
-
     private final UserService userService;
+    private final RoleService roleService;
 
-    @Autowired
-    public UsersController(UserService userService) {
+    public UsersController(UserService userService, RoleService roleService) {
         this.userService = userService;
+        this.roleService = roleService;
     }
 
-    @GetMapping()
+    @GetMapping("admin")
     public String listUser(ModelMap modelMap) {
-        List<User> list = userService.getAllUsers();
-        modelMap.addAttribute("list", list);
-        return "users";
+        modelMap.addAttribute("list", userService.getAllUsers());
+        return "adminPage";
     }
 
-    @GetMapping(value = "/new")
+    @GetMapping("user")
+    public String infoUser(@AuthenticationPrincipal User user, ModelMap model) {
+        model.addAttribute("user", user);
+        model.addAttribute("roles", user.getRoles());
+        return "userPage";
+    }
+
+    @GetMapping(value = "user/new")
     public String newUser(ModelMap model) {
         model.addAttribute("user", new User());
-        return "new";
+        model.addAttribute("roles", roleService.getAllRoles());
+        return "createNew";
     }
 
-    @PostMapping(value = "/new")
-    public String newUser(@ModelAttribute User user) {
+    @PostMapping(value = "user/new")
+    public String newUser(@ModelAttribute User user,
+                          @RequestParam(value = "roless") String[] role) {
+        Set<Role> rolesSet = new HashSet<>();
+        for (String roles : role) {
+            rolesSet.add(roleService.getByName(roles));
+        }
+        user.setRoles(rolesSet);
         userService.save(user);
-        return "redirect:/user/";
+        return "redirect:/admin";
     }
 
-    @GetMapping(value = "/edit/{id}")
+    @GetMapping(value = "user/edit/{id}")
     public String editUser(@PathVariable("id") long id, ModelMap model) {
-        User user = userService.getById(id);
-        model.addAttribute("user", user);
+        model.addAttribute("user", userService.getById(id));
+        model.addAttribute("roles", roleService.getAllRoles());
         return "editUser";
     }
 
-    @PostMapping(value = "/edit/{id}")
-    public String editUser(@ModelAttribute User user) {
+    @PostMapping(value = "user/edit/{id}")
+    public String editUser(@ModelAttribute User user, @RequestParam(value = "roless") String [] role) {
+        Set<Role> rolesSet = new HashSet<>();
+        for (String roles : role) {
+            rolesSet.add((roleService.getByName(roles)));
+        }
+        user.setRoles(rolesSet);
         userService.edit(user);
-        return "redirect:/user/";
+        return "redirect:/admin";
     }
 
-    @GetMapping(value = "/delete/{id}")
+    @GetMapping(value = "user/delete/{id}")
     public String deleteUser(@PathVariable("id") long id) {
         User user = userService.getById(id);
         userService.delete(user);
-        return "redirect:/user/";
+        return "redirect:/admin";
     }
 }

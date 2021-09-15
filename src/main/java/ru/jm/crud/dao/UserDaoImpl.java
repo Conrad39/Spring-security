@@ -8,10 +8,12 @@ import ru.jm.crud.model.User;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.TypedQuery;
 import java.util.List;
 
 @Repository
 public class UserDaoImpl implements UserDao {
+
 
     @PersistenceContext
     EntityManager entityManager;
@@ -43,5 +45,14 @@ public class UserDaoImpl implements UserDao {
     @Override
     public User getById(long id) {
         return entityManager.find(User.class, id);
+    }
+
+    @Override
+    public User getByName(String userName) {
+        TypedQuery<User> query = entityManager.createQuery(
+                "select user from User user where user.username = :username", User.class);
+        return query
+                .setParameter("username", userName)
+                .getSingleResult();
     }
 }

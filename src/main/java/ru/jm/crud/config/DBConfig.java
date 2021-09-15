@@ -25,7 +25,7 @@ public class DBConfig {
     @Bean
     public DataSource dataSource(){
         DriverManagerDataSource dataSource = new DriverManagerDataSource();
-        dataSource.setUrl("jdbc:mysql://localhost:3306/test_crud?verifyServerCertificate=false&useSSL=false&requireSSL=false&useLegacyDatetimeCode=false&amp&serverTimezone=UTC");
+        dataSource.setUrl("jdbc:mysql://localhost:3306/test_1?serverTimezone=UTC");
         dataSource.setUsername("root");
         dataSource.setPassword("77072982");
         dataSource.setDriverClassName("com.mysql.cj.jdbc.Driver");
@@ -35,15 +35,12 @@ public class DBConfig {
 
     @Bean
     public LocalContainerEntityManagerFactoryBean entityManagerFactory() {
-        System.out.println("Entity Manager init");
         LocalContainerEntityManagerFactoryBean em = new LocalContainerEntityManagerFactoryBean();
         em.setDataSource(dataSource());
-        em.setJpaProperties(hibernateProperties());
-
         em.setPackagesToScan("ru.jm.crud.model");
         JpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
         em.setJpaVendorAdapter(vendorAdapter);
-
+        em.setJpaProperties(hibernateProperties());
         return em;
     }
 
