@@ -12,6 +12,7 @@ import ru.jm.crud.model.User;
 import ru.jm.crud.service.RoleService;
 import ru.jm.crud.service.UserService;
 
+import java.security.Principal;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -24,6 +25,17 @@ public class UsersController {
     public UsersController(UserService userService, RoleService roleService) {
         this.userService = userService;
         this.roleService = roleService;
+    }
+
+    @GetMapping("/")
+    public String index(Principal principal, ModelMap modelMap) {
+        modelMap.addAttribute("userName",principal.getName());
+        return "index";
+    }
+
+    @GetMapping("/login")
+    public String login(){
+        return "login";
     }
 
     @GetMapping("admin")
@@ -48,12 +60,12 @@ public class UsersController {
 
     @PostMapping(value = "user/new")
     public String newUser(@ModelAttribute User user,
-                          @RequestParam(value = "roless") String[] role) {
-        Set<Role> rolesSet = new HashSet<>();
+                          @RequestParam(value = "rolez") String[] role) {
+        Set<Role> roleSet = new HashSet<>();
         for (String roles : role) {
-            rolesSet.add(roleService.getByName(roles));
+            roleSet.add(roleService.getByName(roles));
         }
-        user.setRoles(rolesSet);
+        user.setRoles(roleSet);
         userService.save(user);
         return "redirect:/admin";
     }
@@ -66,13 +78,14 @@ public class UsersController {
     }
 
     @PostMapping(value = "user/edit/{id}")
-    public String editUser(@ModelAttribute User user, @RequestParam(value = "roless") String [] role) {
-        Set<Role> rolesSet = new HashSet<>();
-        for (String roles : role) {
-            rolesSet.add((roleService.getByName(roles)));
-        }
-        user.setRoles(rolesSet);
-        userService.edit(user);
+    public String editUser(@ModelAttribute User user, @RequestParam(value = "rolez") String[] role) {
+
+       Set<Role> roleSet = new HashSet<>();
+       for (String roles : role) {
+           roleSet.add(roleService.getByName(roles));
+       }
+        user.setRoles(roleSet);
+       userService.edit(user);
         return "redirect:/admin";
     }
 

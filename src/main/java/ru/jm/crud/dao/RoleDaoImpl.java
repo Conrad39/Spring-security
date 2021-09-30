@@ -3,6 +3,7 @@ package ru.jm.crud.dao;
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 import ru.jm.crud.model.Role;
 
 import javax.persistence.EntityManager;
@@ -17,11 +18,13 @@ public class RoleDaoImpl implements RoleDao{
     EntityManager entityManager;
 
     @Override
+    @Transactional(readOnly = true)
     public List<Role> getAllRoles() {
-        return entityManager.createQuery("FROM Role", Role.class).getResultList();
+        return entityManager.createQuery("select r FROM Role r", Role.class).getResultList();
     }
 
     @Override
+    @Transactional
     public void add(Role role) {
         entityManager.persist(role);
     }

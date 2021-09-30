@@ -38,8 +38,7 @@ public class DBConfig {
         LocalContainerEntityManagerFactoryBean em = new LocalContainerEntityManagerFactoryBean();
         em.setDataSource(dataSource());
         em.setPackagesToScan("ru.jm.crud.model");
-        JpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
-        em.setJpaVendorAdapter(vendorAdapter);
+        em.setJpaVendorAdapter(new HibernateJpaVendorAdapter());
         em.setJpaProperties(hibernateProperties());
         return em;
     }
@@ -66,11 +65,6 @@ public class DBConfig {
         properties.setProperty("hibernate.generate_statistics", "false");
         properties.setProperty("hibernate.use_sql_comments", "false");
 
-        properties.setProperty("connection.provider_class", "org.hibernate.ru.jm.crud.service.jdbc.connections.internal.C3P0ConnectionProvider");
-        properties.setProperty("hibernate.c3p0.min_size", "5");
-        properties.setProperty("hibernate.c3p0.max_size", "20");
-        properties.setProperty("hibernate.c3p0.acquire_increment", "5");
-        properties.setProperty("hibernate.c3p0.timeout", "1800");
         return properties;
     }
 
