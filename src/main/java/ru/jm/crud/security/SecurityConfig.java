@@ -25,11 +25,19 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         this.userDetailsService = userDetailsService;
         this.successUserHandler = successUserHandler;
     }
-
+    // Шифруем пароль через BCrypt, в данный момент отключено, для удобства работы с БД вручную.
     @Bean
     public NoOpPasswordEncoder passwordEncoder() {
         return (NoOpPasswordEncoder) NoOpPasswordEncoder.getInstance();
     }
+
+
+//    @Bean
+//    public PasswordEncoder passwordEncoder(){
+//        return new BCryptPasswordEncoder();
+//    }
+
+
     // конфигурация для прохождения аутентификации
     @Autowired
     public void configureGlobalSecurity(AuthenticationManagerBuilder aut) throws Exception {
