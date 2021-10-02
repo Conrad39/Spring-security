@@ -3,6 +3,8 @@ package ru.jm.crud.service;
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.jm.crud.dao.UserDao;
@@ -16,6 +18,11 @@ public class UserServiceImpl implements UserService {
 
     private UserDao userDao;
 
+//    @Bean
+//    private BCryptPasswordEncoder bCrypt() {
+//        return new BCryptPasswordEncoder();
+//    }
+
     @Autowired
     public void setUser(UserDao userDao) {
         this.userDao = userDao;
@@ -28,6 +35,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void save(User user) {
+       // user.setPassword(bCrypt().encode(user.getPassword()));
         userDao.save(user);
     }
 
@@ -38,6 +46,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void edit(User user) {
+        //user.setPassword(bCrypt().encode(user.getPassword()));
         userDao.edit(user);
     }
 
